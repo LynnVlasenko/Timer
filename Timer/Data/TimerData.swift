@@ -1,8 +1,8 @@
 //
 //  AlarmData.swift
-//  Clock
+//  Timer
 //
-//  Created by Алина Власенко on 02.02.2023.
+//  Created by Алина Власенко on 01.03.2023.
 //
 
 import Foundation

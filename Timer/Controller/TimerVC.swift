@@ -1,8 +1,8 @@
 //
 //  TimerVC.swift
-//  Clock
+//  Timer
 //
-//  Created by Алина Власенко on 31.01.2023.
+//  Created by Алина Власенко on 01.03.2023.
 //
 
 import UIKit
@@ -14,8 +14,6 @@ class TimerVC: UIViewController {
     private let allHours = TimerData.shared.hours()
     private let allMinutes = TimerData.shared.minutes()
     private let allSeconds = TimerData.shared.seconds()
-    
-    //private let settings = SettingsData.shared.getTimerSettings() //передаємо у константу наші дані для таблички під таймером - у SettingsData вже створений масив з даними для неї
     
     //MARK: - Timer
     private var timer = Timer() //створюємо таймер за допомогою класу Timer()
@@ -107,7 +105,7 @@ class TimerVC: UIViewController {
         button.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
         button.layer.cornerRadius = button.frame.width / 2.0
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.systemBackground.cgColor// UIColor.red.cgColor//UIColor.clear.cgColor
+        button.layer.borderColor = UIColor.systemBackground.cgColor
         button.addTarget(self, action: #selector(startAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -145,36 +143,15 @@ class TimerVC: UIViewController {
         return button
     }()
     
-//    //MARK: - UI settings table
-//    private let settingsTable: UITableView = {
-//        let table = UITableView()
-//        table.layer.backgroundColor = UIColor.clear.cgColor
-//        table.isScrollEnabled = false
-//        table.separatorStyle = .none
-//        table.showsVerticalScrollIndicator = false
-//        table.backgroundColor = .systemGray6
-//        table.layer.cornerRadius = 10
-//        table.translatesAutoresizingMaskIntoConstraints = false
-//        table.register(SettingsTableCell.self, forCellReuseIdentifier: SettingsTableCell.identifier)
-//        return table
-//    }()
-    
-    
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        // change bg
         view.backgroundColor = .systemBackground
-        // add subviews
         addSubviews()
-        // apply constraints
         applyConstraints()
-        // apply delegates
         applyPickerViewDelegates()
-        //applyTableViewDelegates()
     }
     
-
     //MARK: - add subviews
     private func addSubviews() {
         view.addSubview(timerPicker)
@@ -188,7 +165,6 @@ class TimerVC: UIViewController {
         circle2.addSubview(startButton)
         circle2.addSubview(stopButton)
         circle2.addSubview(continueButton)
-        //view.addSubview(settingsTable)
     }
     
     //MARK: - Convert to seconds
@@ -261,7 +237,6 @@ class TimerVC: UIViewController {
         circle2.layer.borderColor = UIColor(named: "SpecialYellow")?.cgColor
         
         print("StartButton clicked")
-        
     }
     
     @objc func stopAction() {
@@ -303,7 +278,6 @@ class TimerVC: UIViewController {
             countDown -= 1 //якщо лічильник не 0 і ще рахує - віднімає значення на 1
             makeFullStringTime(seconds: countDown) //і передається наша лейбла зі значеннями часу, що спливає
         }
-        
     }
     
     //MARK: - apply constraints
@@ -381,13 +355,6 @@ class TimerVC: UIViewController {
             continueButton.widthAnchor.constraint(equalToConstant: 80)
         ]
         
-//        let settingsTableConstraints = [
-//            settingsTable.topAnchor.constraint(equalTo: startButton.bottomAnchor, constant: 40),
-//            settingsTable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-//            settingsTable.heightAnchor.constraint(equalToConstant: CGFloat(settings.count * 50)),
-//            settingsTable.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-//        ]
-//
         NSLayoutConstraint.activate(timerPickerConstraints)
         NSLayoutConstraint.activate(timeLabelConstraints)
         NSLayoutConstraint.activate(labelHoursConstraints)
@@ -399,8 +366,6 @@ class TimerVC: UIViewController {
         NSLayoutConstraint.activate(startButtonConstraints)
         NSLayoutConstraint.activate(stopButtonConstraints)
         NSLayoutConstraint.activate(continueButtonConstraints)
-        //NSLayoutConstraint.activate(settingsTableConstraints)
-       
     }
     
     //MARK: - Configure label
@@ -414,26 +379,17 @@ class TimerVC: UIViewController {
 //екстешн для роботи пікера
 extension TimerVC: UIPickerViewDelegate, UIPickerViewDataSource {
     
-    
     private func applyPickerViewDelegates() {
         timerPicker.delegate = self
         timerPicker.dataSource = self
     }
-    
     //Налаштовуємо кількість компонентів у пікера
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 3 //компонентів у пікері 3 (по індексу воні передаються як 0(наш 1 масив з годинами), 1(наш другий масив з хвилинами) і 2(наш 3 масив з секундами))
     }
     //Кількість рядків в компоненті - тут так само як із секціями
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-//        if component == 0 { //вказуємо що якщо 1 компонент (по індексу він 0)
-//            return allHours.count //то повертаємо кількість рядків годин (тобто в масиві у нас їх 24 - у першому пікері з'явиться 24 значення)
-//        } else if component == 1 { //на 2 компонент (тобто по індексу 1)
-//            return allMinutes.count //ми повертаємо хвилини (буде 60 значень у пікери)
-//        } else { //на 3 компонент
-//            return allSeconds.count //ми повертаємо секунди (буде 60 значень у пікери)
-//        }
-        //кращий варіан зі switch
+        
         switch component {
         case 0:
             return allHours.count
@@ -448,15 +404,7 @@ extension TimerVC: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     //передаємо значення для відображення в рядках
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        //щоб не передавати значення з масивів - ми передаємо значення через індекси так як вони відповідні для значень годин і хвилин теж - тобто починаються від 0 і значення рівне своєму індексу. Едине треба для індексів від 0 до 9 треба попереду додати 0. Тож прописуємо далі умови для цього.
-//        if component == 0 { //для першого масиву який у нас 0 за індексом
-//            return "\(row)" //повертаємо просто значення індекса
-//        } else if component == 1 { //інший компонент далі з такими ж умовами як і для першого
-//            return "\(row)"
-//        } else {
-//            return "\(row)"
-//            }
-        //також, switch тут більше підходить
+        
         switch component {
         case 0:
             return "\(row)"
@@ -468,47 +416,4 @@ extension TimerVC: UIPickerViewDelegate, UIPickerViewDataSource {
             return ""
         }
     }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        //функція в якій можна встановити якусь дію, якщо обрана певна комбінація, наприклад
-    }
 }
-
-
-////MARK: - UITableViewDelegate & DataSource
-//extension TimerVC: UITableViewDelegate, UITableViewDataSource {
-//
-//    // apply delegates
-//    private func applyTableViewDelegates() {
-//        settingsTable.delegate = self
-//        settingsTable.dataSource = self
-//    }
-//
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return settings.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableCell.identifier) as? SettingsTableCell else { return UITableViewCell()}
-//
-//        let model = settings[indexPath.row]
-//
-//        if model.accesorry {
-//            cell.accessoryType = .disclosureIndicator
-//        }
-//
-//        cell.configure(with: model)
-//
-//
-//
-//        return cell
-//
-//    }
-//
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 50
-//    }
-//
-//}
-
